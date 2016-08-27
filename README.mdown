@@ -1,0 +1,3 @@
+**IceBurg Events**
+
+This project is a common library used to create, post, and listen for events.

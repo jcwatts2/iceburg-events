@@ -1,6 +1,5 @@
 package edu.depaul.iceburg.events;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 /**
  * An interface to be implemented by any class that will represent an Event

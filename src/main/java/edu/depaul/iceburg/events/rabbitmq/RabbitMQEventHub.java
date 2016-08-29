@@ -32,6 +32,7 @@ import java.util.Map;
 import static edu.depaul.iceburg.events.EventType.MULTI_BERG;
 import static edu.depaul.iceburg.events.EventType.PROXIMITY;
 import static edu.depaul.iceburg.events.EventType.TOUCH;
+import static edu.depaul.iceburg.events.EventType.TOUCH_ALL;
 
 
 /**
@@ -207,7 +208,12 @@ public class RabbitMQEventHub implements EventHub {
 
         if (eventListeners == null) {
             eventListeners = new ArrayList<EventListener>();
-            this.listeners.put(eventType, eventListeners);
+
+            if (TOUCH_ALL.equals(eventType)) {
+                this.listeners.put(TOUCH, eventListeners);
+            } else {
+                this.listeners.put(eventType, eventListeners);
+            }
         }
         eventListeners.add(listener);
     }

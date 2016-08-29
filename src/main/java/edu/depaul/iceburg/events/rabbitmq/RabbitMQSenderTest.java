@@ -15,10 +15,13 @@ public class RabbitMQSenderTest {
         hub.setExchangeName("events");
         hub.init("A");
 
-        hub.postEvent(new TouchEvent("A", 1, true, System.currentTimeMillis()));
 
         try {
+            hub.postEvent(new TouchEvent("A", 1, true, System.currentTimeMillis()));
             Thread.sleep(5000);
+            hub.postEvent(new TouchEvent("B", 1, true, System.currentTimeMillis()));
+
+            Thread.sleep(10000);
             hub.postEvent(new TouchEvent("A", 1, false, System.currentTimeMillis()));
 
         } catch (InterruptedException ex) {

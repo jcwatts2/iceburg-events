@@ -1,10 +1,15 @@
 package edu.depaul.iceburg.events;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.ToString;
+
 
 /**
  * An event posted when corresponding touch sensors on two icebergs are being touched (or just released)
  */
+@ToString
 public class MultiTouchEvent extends TouchEvent implements Event {
 
     /**

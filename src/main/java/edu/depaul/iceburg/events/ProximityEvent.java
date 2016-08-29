@@ -3,9 +3,13 @@ package edu.depaul.iceburg.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.ToString;
+
+
 /**
  * An event posted when a person is detected near the iceberg
  */
+@ToString
 public class ProximityEvent implements Event {
 
     private String iceberg;

@@ -3,10 +3,13 @@ package edu.depaul.iceburg.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.ToString;
+
 
 /**
  * An event posted when a sensor is touched on the iceberg
  */
+@ToString
 public class TouchEvent implements Event {
 
     private Integer sensorNumber;

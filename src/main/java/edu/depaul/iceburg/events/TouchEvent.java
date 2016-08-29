@@ -11,7 +11,7 @@ public class TouchEvent implements Event {
 
     private Integer sensorNumber;
 
-    private String icebergNumber;
+    private String icebergId;
 
     private boolean touched;
 
@@ -24,13 +24,13 @@ public class TouchEvent implements Event {
     /**
      * Creates an instance of the TouchEvent
      *
-     * @param icebergNumber the id of the iceberg
+     * @param icebergId the id of the iceberg
      * @param sensorNumber the id of the sensor which was touched
      * @param touched indicates if a user is touching the sensor or has disengaged
      * @param time the time the event is created/posted (milliseconds since the epoch)
      */
-    public TouchEvent(String icebergNumber, Integer sensorNumber, boolean touched, long time) {
-        this.icebergNumber = icebergNumber;
+    public TouchEvent(String icebergId, Integer sensorNumber, boolean touched, long time) {
+        this.icebergId = icebergId;
         this.sensorNumber = sensorNumber;
         this.touched = touched;
         this.time = time;
@@ -50,8 +50,8 @@ public class TouchEvent implements Event {
      *
      * @return String id of the iceberg
      */
-    public String getIcebergNumber() {
-        return this.icebergNumber;
+    public String getIcebergId() {
+        return this.icebergId;
     }
 
     /**

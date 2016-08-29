@@ -30,7 +30,7 @@ class RabbitMQReceiverTest {
 
             public void handleEvent(final Event e) {
                 final TouchEvent event = (TouchEvent)e;
-                System.out.println("Event: " + event.getType() + ", iceberg=" + event.getIcebergNumber() +
+                System.out.println("Event: " + event.getType() + ", iceberg=" + event.getIcebergId() +
                         ", sensorNumber=" + event.getSensorNumber() + ", touched=" + event.isTouched());
             }
         });

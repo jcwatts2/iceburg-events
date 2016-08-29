@@ -1,6 +1,8 @@
 package edu.depaul.iceburg.events.rabbitmq;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -55,6 +57,8 @@ public class RabbitMQEventHub implements EventHub {
 
     private Map<EventType, C> consumers;
 
+    private ObjectMapper objectmapper;
+
     private Logger logger = org.slf4j.LoggerFactory.getLogger(RabbitMQEventHub.class);
 
     public void addListener(final EventListener listener) {
@@ -74,6 +78,7 @@ public class RabbitMQEventHub implements EventHub {
      */
     public void init(String icebergName) throws HubInitializationException {
 
+        this.objectmapper = new ObjectMapper();
         this.icebergName = icebergName;
         this.listeners = new HashMap<EventType, List<EventListener>>();
 
@@ -86,12 +91,16 @@ public class RabbitMQEventHub implements EventHub {
             this.channel.exchangeDeclare(this.getExchangeName(), "topic");
             this.queueName = this.channel.queueDeclare().getQueue();
 
-            this.transformers = new HashMap<EventType, EventTransformer>();
-            this.transformers.put(TOUCH, new TouchEventTransformer());
-            this.transformers.put(PROXIMITY, new ProximityEventTransformer());
-            this.transformers.put(MULTI_BERG, new MultiBergTouchEventTransformer());
+            this.transformers = new HashMap<>();
+            this.transformers.put(TOUCH,
+                    (event) -> ((TouchEvent)event).getIcebergId() + "."  +
+                            ((TouchEvent)event).getSensorNumber() + ".touch.event ");
+            this.transformers.put(PROXIMITY,
+                    (event) -> ((ProximityEvent)event).getIceberg() + ".proximity.event");
+            this.transformers.put(MULTI_BERG,
+                    (event) -> ((MultiTouchEvent)event).getSensorNumber() + ".correspondence.event");
 
-            this.consumers = new HashMap<EventType, C>();
+            this.consumers = new HashMap<>();
 
         } catch (Exception ex) {
             throw new HubInitializationException("Error initializing event hub.", ex);
@@ -104,7 +113,9 @@ public class RabbitMQEventHub implements EventHub {
     public void shutdown() {
         try {
             this.channel.close();
+
         } catch (Exception ex) {
+            this.logger.error("Error shutting down rabbitmq channel.");
         }
     }
 
@@ -115,10 +126,12 @@ public class RabbitMQEventHub implements EventHub {
         if (transformer == null) { return; }
 
         try {
-            channel.basicPublish(this.getExchangeName(), this.getPublishRoutingKey(event.getType(), event), null,
-                    transformer.messageFromEvent(event).getBytes("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
+            channel.basicPublish(this.getExchangeName(),
+                    this.getPublishRoutingKey(event.getType(), event), null,
+                    this.objectmapper.writeValueAsString(event).getBytes("UTF-8"));
+
+        } catch (IOException ex) {
+            this.logger.error("Error posting event " + event.getType(), ex);
         }
     }
 
@@ -161,7 +174,7 @@ public class RabbitMQEventHub implements EventHub {
 
             case TOUCH:
                 final TouchEvent touchEvent = (TouchEvent) event;
-                return touchEvent.getIcebergNumber() + "." + touchEvent.getSensorNumber() + ".touch.event";
+                return touchEvent.getIcebergId() + "." + touchEvent.getSensorNumber() + ".touch.event";
 
             default:
                 throw new Error("Undefined event type");
@@ -207,7 +220,7 @@ public class RabbitMQEventHub implements EventHub {
 
             this.channel.queueBind(this.queueName, this.getExchangeName(), this.getBindingKeyForEvent(eventType));
 
-            consumer = new C(this.channel, this.transformers.get(eventType));
+            consumer = new C(this.channel);
             this.consumers.put(eventType, consumer);
             channel.basicConsume(this.queueName, true, consumer);
         }
@@ -215,23 +228,32 @@ public class RabbitMQEventHub implements EventHub {
 
     private class C extends DefaultConsumer {
 
-        private EventTransformer transformer;
-
-        C(Channel channel, EventTransformer transformer) {
+        C(Channel channel) {
             super(channel);
-            this.transformer = transformer;
         }
 
         @Override
         public void handleDelivery(
             String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
 
-            String message = new String(body, "UTF-8");
+            RabbitMQEventHub.this.logger.debug("Received Event: {}", new String(body, "UTF-8"));
 
-            System.out.println("Message received: " + message);
-
-            Event event = transformer.eventFromMessage(message);
+            Event event = RabbitMQEventHub.this.objectmapper.readValue(body, Event.class);
             RabbitMQEventHub.this.notify(event);
         }
+    }
+
+    /**
+     * Interface to be implemented by any class that will be used to map an event to a RabbitMQ route
+     */
+    private interface EventTransformer<T extends Event> {
+
+        /**
+         * Returns the routing key for the specified Event.
+         *
+         * @param event the Event
+         * @return String routing key
+         */
+        String routingKeyForEvent(T event);
     }
 }

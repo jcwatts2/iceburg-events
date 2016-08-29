@@ -17,13 +17,13 @@ public class MultiTouchEvent extends TouchEvent implements Event {
     /**
      * Creates an instance of the MultiTouchEvent
      *
-     * @param icebergNumber the id of the iceberg publishing the event
+     * @param icebergId the id of the iceberg publishing the event
      * @param sensorNumber the id of the sensor being touched
      * @param touched indicates if users are touching the sensor or have disengaged
      * @param time the time the event is created/posted (milliseconds since the epoch)
      */
-    public MultiTouchEvent(String icebergNumber, Integer sensorNumber, boolean touched, long time) {
-        super(icebergNumber, sensorNumber, touched, time);
+    public MultiTouchEvent(String icebergId, Integer sensorNumber, boolean touched, long time) {
+        super(icebergId, sensorNumber, touched, time);
     }
 
     /**

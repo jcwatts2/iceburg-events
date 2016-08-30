@@ -17,7 +17,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.depaul.iceburg</groupId>
+    <groupId>iceburg</groupId>
     <artifactId>events</artifactId>
     <version>1.0.0</version>
 

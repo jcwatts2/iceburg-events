@@ -1,7 +1,7 @@
-package edu.depaul.iceburg.events.rabbitmq;
+package iceburg.events.rabbitmq;
 
 
-import edu.depaul.iceburg.events.TouchEvent;
+import iceburg.events.TouchEvent;
 
 /**
  * Created by jwatts on 8/27/16.

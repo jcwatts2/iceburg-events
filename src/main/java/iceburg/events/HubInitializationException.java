@@ -1,4 +1,4 @@
-package edu.depaul.iceburg.events;
+package iceburg.events;
 
 /**
  * Created by jwatts on 8/27/16.

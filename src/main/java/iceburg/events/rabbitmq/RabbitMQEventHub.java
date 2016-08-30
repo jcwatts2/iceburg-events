@@ -1,4 +1,4 @@
-package edu.depaul.iceburg.events.rabbitmq;
+package iceburg.events.rabbitmq;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,15 +10,15 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
-import edu.depaul.iceburg.events.Event;
-import edu.depaul.iceburg.events.EventHub;
-import edu.depaul.iceburg.events.EventListener;
-import edu.depaul.iceburg.events.EventType;
-import edu.depaul.iceburg.events.HubInitializationException;
-import edu.depaul.iceburg.events.ListenerAdditionFailureException;
-import edu.depaul.iceburg.events.MultiTouchEvent;
-import edu.depaul.iceburg.events.ProximityEvent;
-import edu.depaul.iceburg.events.TouchEvent;
+import iceburg.events.Event;
+import iceburg.events.EventHub;
+import iceburg.events.EventListener;
+import iceburg.events.EventType;
+import iceburg.events.HubInitializationException;
+import iceburg.events.ListenerAdditionFailureException;
+import iceburg.events.MultiTouchEvent;
+import iceburg.events.ProximityEvent;
+import iceburg.events.TouchEvent;
 
 import org.slf4j.Logger;
 
@@ -29,10 +29,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static edu.depaul.iceburg.events.EventType.MULTI_BERG;
-import static edu.depaul.iceburg.events.EventType.PROXIMITY;
-import static edu.depaul.iceburg.events.EventType.TOUCH;
-import static edu.depaul.iceburg.events.EventType.TOUCH_ALL;
+import static iceburg.events.EventType.MULTI_BERG;
+import static iceburg.events.EventType.PROXIMITY;
+import static iceburg.events.EventType.TOUCH;
+import static iceburg.events.EventType.TOUCH_ALL;
 
 
 /**
@@ -208,12 +208,7 @@ public class RabbitMQEventHub implements EventHub {
 
         if (eventListeners == null) {
             eventListeners = new ArrayList<EventListener>();
-
-            if (TOUCH_ALL.equals(eventType)) {
-                this.listeners.put(TOUCH, eventListeners);
-            } else {
-                this.listeners.put(eventType, eventListeners);
-            }
+            this.listeners.put((TOUCH_ALL.equals(eventType) ? TOUCH : eventType), eventListeners);
         }
         eventListeners.add(listener);
     }
@@ -242,6 +237,7 @@ public class RabbitMQEventHub implements EventHub {
         public void handleDelivery(
             String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
 
+            System.out.println(new String(body, "UTF-8"));
             RabbitMQEventHub.this.logger.debug("Received Event: {}", new String(body, "UTF-8"));
 
             Event event = RabbitMQEventHub.this.objectmapper.readValue(body, Event.class);

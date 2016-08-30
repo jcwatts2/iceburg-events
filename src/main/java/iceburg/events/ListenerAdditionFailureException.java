@@ -1,4 +1,4 @@
-package edu.depaul.iceburg.events;
+package iceburg.events;
 
 import java.io.IOException;
 

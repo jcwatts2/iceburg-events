@@ -1,4 +1,4 @@
-package edu.depaul.iceburg.events;
+package iceburg.events;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

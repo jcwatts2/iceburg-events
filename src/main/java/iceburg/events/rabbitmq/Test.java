@@ -1,11 +1,11 @@
-package edu.depaul.iceburg.events.rabbitmq;
+package iceburg.events.rabbitmq;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.depaul.iceburg.events.Event;
-import edu.depaul.iceburg.events.MultiTouchEvent;
-import edu.depaul.iceburg.events.ProximityEvent;
-import edu.depaul.iceburg.events.TouchEvent;
+import iceburg.events.Event;
+import iceburg.events.MultiTouchEvent;
+import iceburg.events.ProximityEvent;
+import iceburg.events.TouchEvent;
 
 import java.io.IOException;
 

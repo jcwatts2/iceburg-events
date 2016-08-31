@@ -97,7 +97,7 @@ public class RabbitMQEventHub implements EventHub {
                     (event) -> ((TouchEvent)event).getIcebergId() + "."  +
                             ((TouchEvent)event).getSensorNumber() + ".touch.event ");
             this.transformers.put(PROXIMITY,
-                    (event) -> ((ProximityEvent)event).getIceberg() + ".proximity.event");
+                    (event) -> ((ProximityEvent)event).getIcebergId() + ".proximity.event");
             this.transformers.put(MULTI_BERG,
                     (event) -> ((MultiTouchEvent)event).getSensorNumber() + ".correspondence.event");
 
@@ -171,7 +171,7 @@ public class RabbitMQEventHub implements EventHub {
 
             case PROXIMITY:
                 final ProximityEvent proximityEvent = (ProximityEvent) event;
-                return proximityEvent.getIceberg() + ".proximity.event";
+                return proximityEvent.getIcebergId() + ".proximity.event";
 
             case TOUCH:
                 final TouchEvent touchEvent = (TouchEvent) event;

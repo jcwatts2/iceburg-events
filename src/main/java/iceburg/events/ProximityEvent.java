@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class ProximityEvent implements Event {
 
-    private String iceberg;
+    private String icebergId;
 
     private boolean personPresent;
 
@@ -25,12 +25,12 @@ public class ProximityEvent implements Event {
     /**
      * Creates an instance of the ProximityEvent
      *
-     * @param iceberg the id of the iceberg
+     * @param icebergId the id of the iceberg
      * @param personPresent indicates if a user is detected (true) or not (false)
      * @param time the event was created (milliseconds since epoch)
      */
-    public ProximityEvent(String iceberg, boolean personPresent, long time) {
-        this.iceberg = iceberg;
+    public ProximityEvent(String icebergId, boolean personPresent, long time) {
+        this.icebergId = icebergId;
         this.personPresent = personPresent;
         this.time = time;
     }
@@ -49,8 +49,8 @@ public class ProximityEvent implements Event {
      *
      * @return the id of the iceberg
      */
-    public String getIceberg() {
-        return this.iceberg;
+    public String getIcebergId() {
+        return this.icebergId;
     }
 
     /**

@@ -24,7 +24,7 @@ public class Test {
             Event event = mapper.readValue(value.getBytes(), Event.class);
             System.out.println(((TouchEvent)event).getSensorNumber());
 
-            value = mapper.writeValueAsString(new ProximityEvent("A", false, System.currentTimeMillis()));
+            value = mapper.writeValueAsString(new ProximityEvent("A", 1, false, System.currentTimeMillis()));
             System.out.println(value);
             event = mapper.readValue(value.getBytes(), Event.class);
             System.out.println(((ProximityEvent)event).isPersonPresent());

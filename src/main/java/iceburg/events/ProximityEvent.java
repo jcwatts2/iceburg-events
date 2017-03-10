@@ -18,6 +18,8 @@ public class ProximityEvent implements Event {
 
     private long time;
 
+    private int sensorNumber;
+
     public ProximityEvent() {
         super();
     }
@@ -26,14 +28,23 @@ public class ProximityEvent implements Event {
      * Creates an instance of the ProximityEvent
      *
      * @param icebergId the id of the iceberg
+     * @param sensorNumber the number of the proximity sensor
      * @param personPresent indicates if a user is detected (true) or not (false)
      * @param time the event was created (milliseconds since epoch)
      */
-    public ProximityEvent(String icebergId, boolean personPresent, long time) {
+    public ProximityEvent(String icebergId, int sensorNumber, boolean personPresent, long time) {
         this.icebergId = icebergId;
+        this.sensorNumber = sensorNumber;
         this.personPresent = personPresent;
         this.time = time;
     }
+
+    /**
+     * Returns the sensor number
+     *
+     * @return sensor number
+     */
+    public Integer getSensorNumber() { return this.sensorNumber; }
 
     /**
      * Returns if a user is detected (true) or not (false)

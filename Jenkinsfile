@@ -11,7 +11,7 @@ node {
         if (env.BRANCH_NAME == "master") {
 
             stage ("Build") {
-                sh "I'm building ${env.JOB_NAME}"
+                sh "echo Building ${env.JOB_NAME}"
             }
         }
 

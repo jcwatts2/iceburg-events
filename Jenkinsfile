@@ -13,6 +13,7 @@ node {
             stage ("Build") {
                 sh "echo Building ${env.JOB_NAME}"
             }
+            error "Test failed!"
         }
 
     } catch (e) {
